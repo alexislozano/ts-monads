@@ -36,6 +36,16 @@ export module Result {
         }
     }
 
+    export function match<T, U, E>(
+        result: Result<T, E>,
+        { onOk, onErr }: { onOk: (_: T) => U , onErr: (_: E) => U }
+    ): U {
+        switch (result._type) {
+            case "ok": return onOk(result.raw);
+            case "err": return onErr(result.raw);
+        }
+    }
+
     export function unwrap<T>(ok: Ok<T>): T {
         return ok.raw;
     }

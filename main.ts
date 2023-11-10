@@ -17,10 +17,10 @@ type UserRepository = {
 };
 
 function getUserGender(user: User): Result<Gender, "no_gender_defined"> {
-    const { gender } = user;
-    if (Maybe.isSome(gender)) { return Result.ok(Maybe.unwrap(gender)); }
-    if (Maybe.isNone(gender)) { return Result.err("no_gender_defined"); }
-    throw new UnreachableCaseError(gender);
+    return Maybe.match(user.gender, {
+        onSome: (raw) => Result.ok(raw),
+        onNone: () => Result.err("no_gender_defined")
+    });
 }
 
 export function fetchUserGender(repo: UserRepository, id: string): Result<Gender, "no_gender_defined" | "no_user_found"> {

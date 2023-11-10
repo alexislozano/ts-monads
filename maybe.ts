@@ -36,6 +36,16 @@ export module Maybe {
         }
     }
 
+    export function match<T, U>(
+        maybe: Maybe<T>,
+        { onSome, onNone }: { onSome: (_: T) => U , onNone: () => U }
+    ): U {
+        switch (maybe._type) {
+            case "some": return onSome(maybe.raw);
+            case "none": return onNone();
+        }
+    }
+
     export function unwrap<T>(some: Some<T>): T {
         return some.raw;
     }
